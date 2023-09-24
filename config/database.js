@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const updateRatings = require("./updateDB");
 
 const connectDatabase = () => {
     mongoose
@@ -8,6 +9,8 @@ const connectDatabase = () => {
         })
         .then((data) => {
             console.log(`Mongodb connected with server`);
+
+            updateRatings();
         });
 };
 
