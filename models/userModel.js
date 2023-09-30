@@ -20,17 +20,29 @@ const userSchema = new mongoose.Schema(
             required: [true, "Please Enter Your Password"],
             select: false,
         },
-        codechef: {
+        codechef_id: {
             type: String,
         },
-        codeforces: {
+        codeforces_id: {
             type: String,
         },
-        leetcode: {
+        leetcode_id: {
             type: String,
         },
-        github: {
+        github_id: {
             type: String,
+        },
+        codechef_rating: {
+            type: Number,
+        },
+        codeforces_rating: {
+            type: Number,
+        },
+        leetcode_rating: {
+            type: Number,
+        },
+        total_score: {
+            type: Number,
         },
         avatar: {
             type: String,

@@ -30,10 +30,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // Route Imports
-// const user = require("./routes/userRoute");
+const user = require("./routes/userRoutes");
 
 
-// app.use("/api/v1", user);
+app.use("/api/v1", user);
 
 
 
