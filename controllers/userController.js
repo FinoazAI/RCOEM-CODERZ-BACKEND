@@ -1,7 +1,7 @@
 const ErrorHander = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
-
+const LeaderBoard = require("../models/ranklistModel");
 
 // Register a User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -34,6 +34,18 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     res.json({
         "success" : true,
         "message": `User (${user.email}) Registered Successfully!!`
+    })
+
+});
+
+// Register a User
+exports.getLeaderboard = catchAsyncErrors(async (req, res, next) => {
+
+    const leaderboard = await LeaderBoard.findOne({}, {_id:0, __v:0});
+
+    res.json({
+        "success" : true,
+        "data": leaderboard
     })
 
 });

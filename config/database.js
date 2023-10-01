@@ -11,6 +11,15 @@ const connectDatabase = () => {
             console.log(`Mongodb connected with server`);
 
             updateRatings();
+
+            // const UpdateIntervalTime = 43200000;
+            const UpdateIntervalTime = 60000;
+
+            setInterval(() => {
+
+                updateRatings();
+
+            }, UpdateIntervalTime)
         });
 };
 

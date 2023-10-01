@@ -1,6 +1,7 @@
 const { resolve } = require("path");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require("../models/userModel");
+const LeaderBoard = require("../models/ranklistModel");
 const fetch = require("node-fetch");
 
 
@@ -8,7 +9,7 @@ const fetch = require("node-fetch");
 
 let promiseCall = (URL) => {
 
-    return async (resolve, reject) => {
+    return (resolve, reject) => {
         fetch(URL)
             .then((response) => {
                 return response.json()
@@ -25,6 +26,42 @@ let promiseCall = (URL) => {
 }
 
 
+
+let generateSortedRankList = (result) => {
+
+    let Ranklist = {
+        "total_score_list": result,
+        "codechef_ranklist": result,
+        "codeforces_ranklist": result,
+        "leetcode_ranklist": result
+    }
+
+    Ranklist.total_score_list.sort(
+        (x, y) => { return y.total_score - x.total_score }
+    )
+
+    Ranklist.codechef_ranklist.sort(
+        (x, y) => { return y.codechef_rating - x.codechef_rating }
+    )
+
+    Ranklist.codeforces_ranklist.sort(
+        (x, y) => { return y.codeforces_rating - x.codeforces_rating }
+    )
+
+    Ranklist.leetcode_ranklist.sort(
+        (x, y) => { return y.leetcode_rating - x.leetcode_rating }
+    )
+
+
+    setTimeout(() => {
+        console.log("Ranklist : ", Ranklist)
+    }, 3000)
+
+
+}
+
+
+
 const updateRatings = catchAsyncErrors(async () => {
 
     console.log("Ratings Updation Started....");
@@ -37,7 +74,6 @@ const updateRatings = catchAsyncErrors(async () => {
 
 
 
-    let Ranklist = []
     let PromiseList = []
 
     for (let user of userdata) {
@@ -88,7 +124,7 @@ const updateRatings = catchAsyncErrors(async () => {
                     finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating
                     finalData.total_score += finalData.codeforces_rating
 
-                    finalData.leetcode_rating = res[2].data.userContestRanking.rating
+                    finalData.leetcode_rating = parseInt(res[2].data.userContestRanking.rating)
                     finalData.total_score += finalData.leetcode_rating
 
                     resolve(finalData)
@@ -104,9 +140,61 @@ const updateRatings = catchAsyncErrors(async () => {
     }
 
 
+    let TotalList = [];
+    let CodechefList = [];
+    let CodeforcesList = [];
+    let LeetcodeList = [];
+
+    let Ranklist = {}
+
+
     Promise.all(PromiseList)
-        .then((result) => {
-            console.log("End Result : ", result)
+        .then(async (result) => {
+
+            // console.log("End Result : ", result)
+
+            let Ranklist = {
+                "total_score_list": [...result],
+                "codechef_ranklist": [...result],
+                "codeforces_ranklist": [...result],
+                "leetcode_ranklist": [...result]
+            }
+
+            Ranklist.total_score_list.sort(
+                (x, y) => { return y.total_score - x.total_score }
+            )
+
+            Ranklist.codechef_ranklist.sort(
+                (x, y) => { return y.codechef_rating - x.codechef_rating }
+            )
+
+            Ranklist.codeforces_ranklist.sort(
+                (x, y) => { return y.codeforces_rating - x.codeforces_rating }
+            )
+
+            Ranklist.leetcode_ranklist.sort(
+                (x, y) => { return y.leetcode_rating - x.leetcode_rating }
+            )
+
+
+            // console.log("Ranklist.total_score_list : ", Ranklist.total_score_list)
+            // console.log("Ranklist : ", Ranklist)
+
+            await LeaderBoard.deleteMany({})
+
+            const updatedList = await LeaderBoard.create(
+                {
+                    ...Ranklist
+                }
+            );
+
+            console.log({
+                "success" : true,
+                "message": `Leaderboard Updated Successfully!!`,
+                "leaderboard": updatedList
+            })
+
+
         })
         .catch((error) => {
             console.log(error)
@@ -114,6 +202,66 @@ const updateRatings = catchAsyncErrors(async () => {
 
 
 })
+
+
+
+
+
+// Promise.all(PromiseList)
+//         .then((result) => {
+//             // console.log("End Result : ", result)
+
+//             TotalList = result;
+//             CodechefList = result;
+//             CodeforcesList = result;
+//             LeetcodeList = result;
+
+
+//             TotalList.sort(
+//                 (x, y) => { return y.total_score - x.total_score }
+//             )
+
+
+//         })
+//         .then((res) => {
+//             CodechefList.sort(
+//                 (x, y) => { return y.codechef_rating - x.codechef_rating }
+//             )
+
+//         })
+//         .then((res) => {
+//             CodeforcesList.sort(
+//                 (x, y) => { return y.codeforces_rating - x.codeforces_rating }
+//             )
+
+//         })
+//         .then((res) => {
+//             LeetcodeList.sort(
+//                 (x, y) => { return y.leetcode_rating - x.leetcode_rating }
+//             )
+
+//         })
+//         .then((res) => {
+
+//             Ranklist = {
+//                 "total_score_list": TotalList,
+//                 "codechef_ranklist": CodechefList,
+//                 "codeforces_ranklist": CodeforcesList,
+//                 "leetcode_ranklist": LeetcodeList
+//             }
+
+
+//         })
+//         .then(()=>{
+//             console.log("Ranklist : ", Ranklist)
+//         })
+//         .catch((error) => {
+//             console.log(error)
+//         })
+
+
+
+
 
 
 
