@@ -138,13 +138,3 @@ leetcode = {
         }
     }
 }
-
-myData = {
-    "name": "Pratham Rajbhoj",
-    "email": "rajbhojpr@rknec.edu",
-    "password": "Pratham23",
-    "codechef_id": "noob_pratham",
-    "codeforces_id": "noob_pratham23",
-    "github_id": "Pratham2301",
-    "leetcode_id": "noob_pratham23"
-}
