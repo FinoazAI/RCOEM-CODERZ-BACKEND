@@ -10,15 +10,15 @@ let promiseCall = (URL) => {
 
     return async (resolve, reject) => {
         fetch(URL)
-            .then((response) => { 
-                return response.json() 
+            .then((response) => {
+                return response.json()
             })
-            .then((jsonResponse)=>{
+            .then((jsonResponse) => {
                 // console.log(URL, jsonResponse)
-                return resolve(jsonResponse);
+                resolve(jsonResponse);
             })
-            .catch((error)=>{
-                return reject(error)
+            .catch((error) => {
+                reject(error)
             })
     }
 
@@ -38,6 +38,7 @@ const updateRatings = catchAsyncErrors(async () => {
 
 
     let Ranklist = []
+    let PromiseList = []
 
     for (let user of userdata) {
 
@@ -71,18 +72,45 @@ const updateRatings = catchAsyncErrors(async () => {
         }
 
 
-        let p1 = new Promise(promiseCall(process.env.CODECHEF_API + cc_id))
-        let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + cf_id))
-        let p3 = new Promise(promiseCall(process.env.LEETCODE_API + lc_id))
+        let p = new Promise((resolve, reject) => {
 
-        Promise.all([p1, p2, p3])
-            .then((res => {
-                console.log("Response ALL ", res)
-            }))
-            .catch((err) => {
-                console.log("Error : ", err)
-            })
+            let p1 = new Promise(promiseCall(process.env.CODECHEF_API + cc_id))
+            let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + cf_id))
+            let p3 = new Promise(promiseCall(process.env.LEETCODE_API + lc_id))
+
+            Promise.all([p1, p2, p3])
+                .then(((res) => {
+                    // console.log("Response ALL ", res)
+
+                    finalData.codechef_rating = res[0].rating_number + res[0].max_rank
+                    finalData.total_score += finalData.codechef_rating
+
+                    finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating
+                    finalData.total_score += finalData.codeforces_rating
+
+                    finalData.leetcode_rating = res[2].data.userContestRanking.rating
+                    finalData.total_score += finalData.leetcode_rating
+
+                    resolve(finalData)
+                }))
+                .catch((error) => {
+                    // console.log("Error : ", error)
+                    reject(error)
+                })
+
+        })
+
+        PromiseList.push(p);
     }
+
+
+    Promise.all(PromiseList)
+        .then((result) => {
+            console.log("End Result : ", result)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
 
 
 })
@@ -180,8 +208,8 @@ const updateRatings = catchAsyncErrors(async () => {
 //                 const LEETCODE_API = process.env.LEETCODE_API + lc_id
 //                 const response = await fetch(LEETCODE_API);
 //                 const jsonResponse = await response.json();
-//                 finalData.leetcode_rating = jsonResponse.data.userContestRanking.rating
-//                 finalData.total_score += finalData.leetcode_rating
+// finalData.leetcode_rating = jsonResponse.data.userContestRanking.rating
+// finalData.total_score += finalData.leetcode_rating
 //                 // console.log("Leetcode : ", lc_id, lc_score)
 //             }
 
