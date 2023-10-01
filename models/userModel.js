@@ -34,18 +34,23 @@ const userSchema = new mongoose.Schema(
         },
         codechef_rating: {
             type: Number,
+            default: 0
         },
         codeforces_rating: {
             type: Number,
+            default: 0
         },
         leetcode_rating: {
             type: Number,
+            default: 0
         },
         total_score: {
             type: Number,
+            default: 0
         },
         avatar: {
             type: String,
+            default: "https://avatars.githubusercontent.com/u/146207981?v=4"
         },
         createdAt: {
             type: Date,
