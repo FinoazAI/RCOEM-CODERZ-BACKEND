@@ -5,7 +5,7 @@ const fetch = require("node-fetch");
 
 
 
-
+// General function to Fetch data from {CC, CF, LC} Apis 
 let promiseCall = (URL) => {
 
     return (resolve, reject) => {
@@ -26,41 +26,8 @@ let promiseCall = (URL) => {
 
 
 
-let generateSortedRankList = (result) => {
 
-    let Ranklist = {
-        "total_score_list": result,
-        "codechef_ranklist": result,
-        "codeforces_ranklist": result,
-        "leetcode_ranklist": result
-    }
-
-    Ranklist.total_score_list.sort(
-        (x, y) => { return y.total_score - x.total_score }
-    )
-
-    Ranklist.codechef_ranklist.sort(
-        (x, y) => { return y.codechef_rating - x.codechef_rating }
-    )
-
-    Ranklist.codeforces_ranklist.sort(
-        (x, y) => { return y.codeforces_rating - x.codeforces_rating }
-    )
-
-    Ranklist.leetcode_ranklist.sort(
-        (x, y) => { return y.leetcode_rating - x.leetcode_rating }
-    )
-
-
-    setTimeout(() => {
-        console.log("Ranklist : ", Ranklist)
-    }, 3000)
-
-
-}
-
-
-
+// Updates User ratings & set leaderboard with lastest data
 const updateRatings = catchAsyncErrors(async () => {
 
     console.log("Ratings Updation Started....");
