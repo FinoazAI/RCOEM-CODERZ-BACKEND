@@ -1,4 +1,4 @@
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const LeaderBoard = require("../models/ranklistModel");
 
 

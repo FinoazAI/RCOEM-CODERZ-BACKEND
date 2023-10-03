@@ -1,5 +1,5 @@
 const ErrorHander = require("../utils/errorhandler");
-const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const User = require("../models/userModel");
 const LeaderBoard = require("../models/ranklistModel");
 
