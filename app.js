@@ -31,9 +31,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Route Imports
 const user = require("./routes/userRoutes");
+const leaderboard = require("./routes/leaderboardRoutes");
 
 
 app.use("/api/v1", user);
+app.use("/api/v1/leaderboard", leaderboard);
 
 
 
