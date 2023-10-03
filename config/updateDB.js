@@ -2,6 +2,7 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const User = require("../models/userModel");
 const LeaderBoard = require("../models/ranklistModel");
 const fetch = require("node-fetch");
+const { default: mongoose } = require("mongoose");
 
 
 
@@ -140,7 +141,12 @@ const updateRatings = catchAsyncErrors(async () => {
             // console.log("Ranklist.total_score_list : ", Ranklist.total_score_list)
             // console.log("Ranklist : ", Ranklist)
 
-            await LeaderBoard.deleteMany({})
+            let x = mongoose.connection.collections.leaderboards
+            // console.log(x)
+
+            if(x){
+                await LeaderBoard.deleteMany({})
+            }
 
             const updatedList = await LeaderBoard.create(
                 {
