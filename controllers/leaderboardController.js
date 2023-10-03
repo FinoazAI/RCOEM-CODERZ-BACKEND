@@ -8,10 +8,12 @@ exports.get_codechef_leaderboard = catchAsyncErrors(async (req, res, next) => {
 
     const leaderboard = await LeaderBoard.findOne({}, {_id:0, __v:0});
     const codechef = leaderboard.codechef_ranklist
+    const updatedAt = leaderboard.updatedAt
 
     res.json({
         "success" : true,
-        "data": codechef
+        "data": codechef,
+        updatedAt 
     })
 
 });
@@ -21,10 +23,12 @@ exports.get_codeforces_leaderboard = catchAsyncErrors(async (req, res, next) => 
 
     const leaderboard = await LeaderBoard.findOne({}, {_id:0, __v:0});
     const codeforces = leaderboard.codeforces_ranklist
+    const updatedAt = leaderboard.updatedAt
 
     res.json({
         "success" : true,
-        "data": codeforces
+        "data": codeforces,
+        updatedAt
     })
 
 });
@@ -34,10 +38,12 @@ exports.get_leetcode_leaderboard = catchAsyncErrors(async (req, res, next) => {
 
     const leaderboard = await LeaderBoard.findOne({}, {_id:0, __v:0});
     const leetcode = leaderboard.leetcode_ranklist
+    const updatedAt = leaderboard.updatedAt
 
     res.json({
         "success" : true,
-        "data": leetcode
+        "data": leetcode,
+        updatedAt
     })
 
 });
@@ -47,10 +53,12 @@ exports.get_totalScore_leaderboard = catchAsyncErrors(async (req, res, next) => 
 
     const leaderboard = await LeaderBoard.findOne({}, {_id:0, __v:0});
     const totalScore = leaderboard.total_score_list
+    const updatedAt = leaderboard.updatedAt
 
     res.json({
         "success" : true,
-        "data": totalScore
+        "data": totalScore,
+        updatedAt
     })
 
 });
