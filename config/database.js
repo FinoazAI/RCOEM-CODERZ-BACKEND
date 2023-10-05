@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const updateRatings = require("./updateDB");
 
+
 const connectDatabase = () => {
     mongoose
         .connect(process.env.DB_URI, {
@@ -13,7 +14,7 @@ const connectDatabase = () => {
             updateRatings();
 
             // const UpdateIntervalTime = 43200000;
-            const UpdateIntervalTime = 300000;
+            const UpdateIntervalTime = 600000;
 
             setInterval(() => {
 
@@ -22,5 +23,6 @@ const connectDatabase = () => {
             }, UpdateIntervalTime)
         });
 };
+
 
 module.exports = connectDatabase;

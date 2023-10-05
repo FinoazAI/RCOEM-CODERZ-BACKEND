@@ -144,7 +144,7 @@ const updateRatings = catchAsyncErrors(async () => {
             let x = mongoose.connection.collections.leaderboards
             // console.log(x)
 
-            if(x){
+            if (x) {
                 await LeaderBoard.deleteMany({})
             }
 
@@ -155,7 +155,7 @@ const updateRatings = catchAsyncErrors(async () => {
             );
 
             console.log({
-                "success" : true,
+                "success": true,
                 "message": `Leaderboard Updated Successfully!!`,
                 "leaderboard": updatedList
             })
