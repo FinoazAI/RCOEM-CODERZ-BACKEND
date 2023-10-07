@@ -5,7 +5,6 @@ const LeaderBoard = require("../models/ranklistModel");
 const OtpModel = require("../models/otpModel");
 const nodeMailer = require("nodemailer");
 const { google } = require("googleapis");
-const otpModel = require("../models/otpModel");
 const OAuth2 = google.auth.OAuth2;
 
 
@@ -115,19 +114,18 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
             }
         });
 
-        // console.log("transported created");
 
-        let user = await otpModel.findOne({ "email": userEmail });
+        let user = await OtpModel.findOne({ "email": userEmail });
 
         if (!user) {
-
-            await otpModel.create({
+            
+            const x = await OtpModel.create({
                 email: userEmail
             });
-
-            user = await otpModel.findOne({ "email": userEmail });
         }
-        
+
+        user = await OtpModel.findOne({ "email": userEmail });
+
         user.generateOTP();
 
         await user.save({ validateBeforeSave: false });
