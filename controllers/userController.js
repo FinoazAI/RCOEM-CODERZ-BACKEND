@@ -2,8 +2,10 @@ const ErrorHander = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const User = require("../models/userModel");
 const LeaderBoard = require("../models/ranklistModel");
+const OtpModel = require("../models/otpModel");
 const nodeMailer = require("nodemailer");
 const { google } = require("googleapis");
+const otpModel = require("../models/otpModel");
 const OAuth2 = google.auth.OAuth2;
 
 
@@ -108,19 +110,24 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
                 user: process.env.SMPT_MAIL,
                 pass: process.env.SMPT_PASSWORD,
             },
-            tls:{
+            tls: {
                 rejectUnAuthorized: false
             }
         });
 
         // console.log("transported created");
 
-        const user = await User.findOne({"email": userEmail});
+        let user = await otpModel.findOne({ "email": userEmail });
 
-        if(!user){
-            return next(new ErrorHander("No user found", 400));
+        if (!user) {
+
+            await otpModel.create({
+                email: userEmail
+            });
+
+            user = await otpModel.findOne({ "email": userEmail });
         }
-
+        
         user.generateOTP();
 
         await user.save({ validateBeforeSave: false });
@@ -166,10 +173,10 @@ exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHander("Sufficient data not found", 400));
     }
 
-    const user = await User.findOne({"email": email});
+    const user = await otpModel.findOne({ "email": email });
 
-    if(!user){
-        return next(new ErrorHander("No user found", 400));
+    if (!user) {
+        return next(new ErrorHander("No user/OTP found", 400));
     }
 
     console.log("user: ", user)
@@ -180,14 +187,14 @@ exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
 
     console.log("isvalid: ", isValid)
 
-    if(isValid){
+    if (isValid) {
         res.json({
             "success": true,
             "isvalid": true,
             "message": `Rknec email id verified successfully `
         })
     }
-    else{
+    else {
         res.json({
             "success": true,
             "isvalid": false,
