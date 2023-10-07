@@ -87,13 +87,13 @@ const updateRatings = catchAsyncErrors(async () => {
                     // console.log("Response ALL ", res)
 
                     finalData.codechef_rating = res[0].rating_number + res[0].max_rank
-                    finalData.total_score += (finalData.codechef_rating*2)
+                    finalData.total_score += (finalData.codechef_rating*1.5)
 
                     finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating
-                    finalData.total_score += (finalData.codeforces_rating*2)
+                    finalData.total_score += (finalData.codeforces_rating*1.5)
 
                     finalData.leetcode_rating = parseInt(res[2].data.userContestRanking.rating)
-                    finalData.total_score += (finalData.leetcode_rating*2)
+                    finalData.total_score += (finalData.leetcode_rating*1.5)
                     
                     let gitScore = 0
                     
