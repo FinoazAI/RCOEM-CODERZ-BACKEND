@@ -104,6 +104,8 @@ const updateRatings = catchAsyncErrors(async () => {
         })
 
         PromiseList.push(p);
+
+        // break;
     }
 
 

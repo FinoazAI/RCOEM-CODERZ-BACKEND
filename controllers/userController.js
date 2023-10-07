@@ -79,6 +79,9 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 
+
+
+
 // send OTP to email id of registered User
 exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
 
@@ -110,18 +113,30 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
             }
         });
 
-        console.log("transported created");
+        // console.log("transported created");
+
+        const user = await User.findOne({"email": userEmail});
+
+        if(!user){
+            return next(new ErrorHander("No user found", 400));
+        }
+
+        user.generateOTP();
+
+        await user.save({ validateBeforeSave: false });
+
+        const OTP = user.emailVerificationOTP;
 
         const mailOptions = {
             from: process.env.SMPT_MAIL,
             to: userEmail,
-            subject: 'Rcoem Coderz - Email Verification',
-            text: 'Your OTP is 9576'
+            subject: 'OTP - Rcoem Coderz',
+            text: `Heyy coder, your One Time Password (OTP) for email verification is ${OTP}. Thank You!!!`
         };
 
         await transporter.sendMail(mailOptions);
 
-        console.log("email sent");
+        // console.log("email sent");
     };
 
     await sendEmail(email);
@@ -136,40 +151,61 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
 });
 
 
+
+
+
+
 // verify OTP sent to email id of registered User
 exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
 
-    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
+    const { email, otp } = req.body;
 
+    console.log("data recieved: ", email, otp);
 
-    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id);
-
-    if (!name || !email || !password) {
-        return next(new ErrorHander("All fields are compulsory!!!", 400));
+    if (!email || !otp) {
+        return next(new ErrorHander("Sufficient data not found", 400));
     }
 
-    if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
-        return next(new ErrorHander("Enter atleast one platform details", 400));
+    const user = await User.findOne({"email": email});
+
+    if(!user){
+        return next(new ErrorHander("No user found", 400));
     }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        codechef_id,
-        codeforces_id,
-        leetcode_id,
-        github_id,
-        avatar: "https://www.nicepng.com/png/detail/804-8049853_med-boukrima-specialist-webmaster-php-e-commerce-web.png"
-    });
+    console.log("user: ", user)
 
+    let isValid = await user.verifyOTP(otp);
+
+    // await user.save({ validateBeforeSave: false });
+
+    console.log("isvalid: ", isValid)
+
+    if(isValid){
+        res.json({
+            "success": true,
+            "isvalid": true,
+            "message": `Rknec email id verified successfully `
+        })
+    }
+    else{
+        res.json({
+            "success": true,
+            "isvalid": false,
+            "message": `Invalid/Expired OTP`
+        })
+    }
 
     res.json({
-        "success": true,
-        "message": `User (${user.email}) Registered Successfully!!`
+        "success": false,
+        "message": `Email validation failed`
     })
 
 });
+
+
+
+
+
 
 
 // get profile data for profile page

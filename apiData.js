@@ -138,3 +138,46 @@ leetcode = {
         }
     }
 }
+
+
+
+
+// {
+//     "name": "Pratham Rajbhoj",
+//     "email": "rajbhojpr@rknec.edu",
+//     "password": "password",
+//     "codechef_id": "noob_pratham",
+//     "codeforces_id": "noob_pratham23",
+//     "github_id": "Pratham2301",
+//     "leetcode_id": "noob_pratham23"
+//   }
+
+//   {
+//     "name": "Kush Munot",
+//     "email": "munotkgm@rknec.edu",
+//     "password": "password",
+//     "codechef_id": "kushmunot",
+//     "codeforces_id": "axelblaze_17",
+//     "github_id": "Kush-munot",
+//     "leetcode_id": "user4382M"
+//   }
+
+//   {
+//     "name": "Bhushan Wanjari",
+//     "email": "wanjaribl@rknec.edu",
+//     "password": "password",
+//     "codechef_id": "bhushan_21z",
+//     "codeforces_id": "bhushanwanjari21z",
+//     "github_id": "Bhushan21z",
+//     "leetcode_id": "bhushan_cd"
+//   }
+
+//   {
+//     "name": "Madhav Jha",
+//     "email": "jhamd@rknec.edu",
+//     "password": "password",
+//     "codechef_id": "jhamadhav28",
+//     "codeforces_id": "jhamadhav28",
+//     "github_id": "jhamadhav",
+//     "leetcode_id": "jhamadhav"
+//   }
