@@ -80,19 +80,32 @@ const updateRatings = catchAsyncErrors(async () => {
             let p1 = new Promise(promiseCall(process.env.CODECHEF_API + cc_id))
             let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + cf_id))
             let p3 = new Promise(promiseCall(process.env.LEETCODE_API + lc_id))
+            let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + ghub_id))
 
-            Promise.all([p1, p2, p3])
+            Promise.all([p1, p2, p3, p4])
                 .then(((res) => {
                     // console.log("Response ALL ", res)
 
                     finalData.codechef_rating = res[0].rating_number + res[0].max_rank
-                    finalData.total_score += finalData.codechef_rating
+                    finalData.total_score += (finalData.codechef_rating*2)
 
                     finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating
-                    finalData.total_score += finalData.codeforces_rating
+                    finalData.total_score += (finalData.codeforces_rating*2)
 
                     finalData.leetcode_rating = parseInt(res[2].data.userContestRanking.rating)
-                    finalData.total_score += finalData.leetcode_rating
+                    finalData.total_score += (finalData.leetcode_rating*2)
+                    
+                    let gitScore = 0
+                    
+                    for (const key in res[3].total) {
+                        if (res[3].total.hasOwnProperty(key)) {
+                            gitScore += parseInt(res[3].total[key]);
+                        }
+                    }
+
+                    // console.log(name, gitScore)
+
+                    finalData.total_score += gitScore
 
                     resolve(finalData)
                 }))
