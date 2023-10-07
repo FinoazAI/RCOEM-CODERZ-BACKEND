@@ -57,11 +57,17 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
     const user = await User.findOne({ "email": email });
 
-    if (user && user.verifyPassword(password)) {
+    if (user && user.password==password) {
 
         res.json({
             "success": true,
             "isvalid": true,
+            "name": user.name,
+            "password": user.password,
+            "github_id": user.github_id,
+            "codechef_id": user.codechef_id,
+            "codeforces_id": user.codeforces_id,
+            "leetcode_id": user.leetcode_id,
             "message": `Credentials verified successfully!!`
         })
 
