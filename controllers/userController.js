@@ -95,6 +95,16 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
     }
 
 
+    const regUser = await User.findOne({ "email": userEmail });
+
+    if(regUser){
+        res.json({
+            "success": false,
+            "message": `User already registered!!`
+        })
+    }
+
+
     const sendEmail = async (userEmail) => {
 
         const transporter = nodeMailer.createTransport({
@@ -118,7 +128,7 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
         let user = await OtpModel.findOne({ "email": userEmail });
 
         if (!user) {
-            
+
             const x = await OtpModel.create({
                 email: userEmail
             });
