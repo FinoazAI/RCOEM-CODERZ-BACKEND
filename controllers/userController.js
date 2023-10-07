@@ -62,7 +62,6 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
         res.json({
             "success": true,
             "isvalid": true,
-            "name": user.name,
             "password": user.password,
             "github_id": user.github_id,
             "codechef_id": user.codechef_id,
@@ -269,34 +268,28 @@ exports.getProfile = catchAsyncErrors(async (req, res, next) => {
 // update profile data for profile page
 exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 
-    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
+    const { email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
 
 
-    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id);
+    console.log(email, password, codechef_id, codeforces_id, leetcode_id, github_id);
 
-    if (!name || !email || !password) {
+    if (!email || !password || !codechef_id || !leetcode_id || !codeforces_id || !github_id) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
-    if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
-        return next(new ErrorHander("Enter atleast one platform details", 400));
-    }
-
-    const user = await User.create({
-        name,
+    const user = await User.findOneAndUpdate({"email": email}, {
         email,
         password,
         codechef_id,
         codeforces_id,
         leetcode_id,
         github_id,
-        avatar: "https://www.nicepng.com/png/detail/804-8049853_med-boukrima-specialist-webmaster-php-e-commerce-web.png"
     });
 
 
     res.json({
         "success": true,
-        "message": `User (${user.email}) Registered Successfully!!`
+        "message": `User (${user.email}) details updated successfully!!`
     })
 
 });
