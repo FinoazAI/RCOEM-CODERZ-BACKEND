@@ -181,7 +181,7 @@ exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHander("Sufficient data not found", 400));
     }
 
-    const user = await otpModel.findOne({ "email": email });
+    const user = await OtpModel.findOne({ "email": email });
 
     if (!user) {
         return next(new ErrorHander("No user/OTP found", 400));
