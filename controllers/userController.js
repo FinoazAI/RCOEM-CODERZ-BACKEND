@@ -94,17 +94,20 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
     const sendEmail = async (userEmail) => {
 
         const transporter = nodeMailer.createTransport({
-            host: process.env.SMPT_HOST,
+            // host: process.env.SMPT_HOST,
             port: process.env.SMPT_PORT,
             service: process.env.SMPT_SERVICE,
-            secure: false,
+            secure: true,
             logger: true,
             debug: true,
-            ignoreTLS: true,
+            secureConnection: false,
             auth: {
                 user: process.env.SMPT_MAIL,
                 pass: process.env.SMPT_PASSWORD,
             },
+            tls:{
+                rejectUnAuthorized: false
+            }
         });
 
         const mailOptions = {
