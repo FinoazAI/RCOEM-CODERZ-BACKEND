@@ -95,7 +95,7 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
     }
 
 
-    const regUser = await User.findOne({ "email": userEmail });
+    const regUser = await User.findOne({ "email": email });
 
     if(regUser){
         res.json({
