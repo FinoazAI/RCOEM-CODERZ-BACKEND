@@ -110,6 +110,8 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
             }
         });
 
+        console.log("transported created");
+
         const mailOptions = {
             from: process.env.SMPT_MAIL,
             to: userEmail,
@@ -118,6 +120,8 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
         };
 
         await transporter.sendMail(mailOptions);
+
+        console.log("email sent");
     };
 
     await sendEmail(email);
