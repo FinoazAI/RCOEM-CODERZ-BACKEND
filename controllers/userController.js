@@ -295,37 +295,73 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 });
 
 
+
 // forgot password - set new password
-exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
+exports.reportUser = catchAsyncErrors(async (req, res, next) => {
 
-    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
+    console.log(11111)
 
+    const { name, email, reporter, codechef, codeforces, leetcode, github } = req.body;
 
-    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id);
+    console.log(name, email, reporter, codechef, codeforces, leetcode, github);
 
-    if (!name || !email || !password) {
+    if (!name || !email || !reporter || !codechef || !codeforces || !leetcode || !github) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
-    if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
-        return next(new ErrorHander("Enter atleast one platform details", 400));
-    }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        codechef_id,
-        codeforces_id,
-        leetcode_id,
-        github_id,
-        avatar: "https://www.nicepng.com/png/detail/804-8049853_med-boukrima-specialist-webmaster-php-e-commerce-web.png"
-    });
+    const data = {
+        "reported_against_name": name, 
+        "reported_by_name": reporter,
+        "reported_by_email": email,
+        "is_codechef_invalid": codechef, 
+        "is_codeforces_invalid": codeforces, 
+        "is_leetcode_invalid": leetcode, 
+        "is_github_invalid": github
+    };
 
+    console.log(data)
+
+
+    const sendEmail = async (userEmail) => {
+
+        const transporter = nodeMailer.createTransport({
+            // host: process.env.SMPT_HOST,
+            port: process.env.SMPT_PORT,
+            service: process.env.SMPT_SERVICE,
+            secure: true,
+            logger: true,
+            debug: true,
+            secureConnection: false,
+            auth: {
+                user: process.env.SMPT_MAIL,
+                pass: process.env.SMPT_PASSWORD,
+            },
+            tls: {
+                rejectUnAuthorized: false
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.SMPT_MAIL,
+            to: userEmail,
+            subject: 'Rcoem Coderz - Someone is reported',
+            text: `Heyy admin, a report is registered. ${JSON.stringify(data)}`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        console.log("email sent to admins");
+    };
+
+    await sendEmail(process.env.ADMIN_EMAIL_1);
+    await sendEmail(process.env.ADMIN_EMAIL_2);
+
+    // console.log('Email sent successfully');
 
     res.json({
         "success": true,
-        "message": `User (${user.email}) Registered Successfully!!`
+        "message": `Report registered successfully!!`
     })
 
 });

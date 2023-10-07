@@ -5,9 +5,8 @@ const {
     loginUser,
     sendOTP,
     verifyOTP,
-    getProfile,
-    forgotPassword,
-    updateProfile
+    updateProfile,
+    reportUser
 } = require("../controllers/userController");
 
 
@@ -18,9 +17,8 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/sendOTP", sendOTP);
 router.post("/verifyOTP", verifyOTP);
-// router.post("/profile", getProfile);
 router.patch("/updateProfile", updateProfile);
-router.post("/forgotPassword", forgotPassword);
+router.post("/report", reportUser);
 
 
 module.exports = router;
