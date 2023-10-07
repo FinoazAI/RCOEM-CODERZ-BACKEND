@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, "Please Enter Your Password"],
-            select: false,
         },
         forgotPasswordOTP: {
             type: String
@@ -64,6 +63,17 @@ const userSchema = new mongoose.Schema(
         }
     }
 );
+
+
+userSchema.methods.verifyPassword = function (input) {
+
+    const pass = this.password
+    // console.log("password validation started: ", input, pass)
+    // console.log(input == this.password)
+    return (input == this.password);
+
+};
+
 
 
 module.exports = mongoose.model("User", userSchema);

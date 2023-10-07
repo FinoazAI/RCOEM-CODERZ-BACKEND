@@ -47,35 +47,36 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 // Login User
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
-    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
+    const { email, password } = req.body;
 
+    console.log("data : ", email, password);
 
-    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id);
-
-    if (!name || !email || !password) {
+    if (!email || !password) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
-    if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
-        return next(new ErrorHander("Enter atleast one platform details", 400));
+    const user = await User.findOne({ "email": email });
+
+    if (user && user.verifyPassword(password)) {
+
+        res.json({
+            "success": true,
+            "isvalid": true,
+            "message": `Credentials verified successfully!!`
+        })
+
+    }
+    else {
+
+        res.json({
+            "success": true,
+            "isvalid": false,
+            "message": `Invalid Credentials`
+        })
+
     }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        codechef_id,
-        codeforces_id,
-        leetcode_id,
-        github_id,
-        avatar: "https://www.nicepng.com/png/detail/804-8049853_med-boukrima-specialist-webmaster-php-e-commerce-web.png"
-    });
 
-
-    res.json({
-        "success": true,
-        "message": `User (${user.email}) Registered Successfully!!`
-    })
 
 });
 
@@ -97,7 +98,7 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
 
     const regUser = await User.findOne({ "email": email });
 
-    if(regUser){
+    if (regUser) {
         res.json({
             "success": false,
             "message": `User already registered!!`
