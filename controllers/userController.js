@@ -62,6 +62,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
         res.json({
             "success": true,
             "isvalid": true,
+            "name": user.name,
             "password": user.password,
             "github_id": user.github_id,
             "codechef_id": user.codechef_id,
