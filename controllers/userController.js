@@ -98,6 +98,8 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
             port: process.env.SMPT_PORT,
             service: process.env.SMPT_SERVICE,
             secure: false,
+            logger: true,
+            debug: true,
             ignoreTLS: true,
             auth: {
                 user: process.env.SMPT_MAIL,
