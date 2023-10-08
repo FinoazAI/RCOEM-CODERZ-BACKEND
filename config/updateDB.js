@@ -86,19 +86,27 @@ const updateRatings = catchAsyncErrors(async () => {
                 .then(((res) => {
                     // console.log("Response ALL ", res)
 
-                    finalData.codechef_rating = res[0].rating_number + res[0].max_rank
-                    finalData.total_score += (finalData.codechef_rating*1.5)
+                    if (res[0] && res[0].rating_number && res[0].max_rank) {
+                        finalData.codechef_rating = res[0].rating_number + res[0].max_rank
+                        finalData.total_score += (finalData.codechef_rating * 1.5)
+                    }
 
-                    finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating
-                    finalData.total_score += (finalData.codeforces_rating*1.5)
+                    if (res[1] && res[1][0] && res[1][0].rating && res[1][0].maxRating) {
+                        finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating
+                        finalData.total_score += (finalData.codeforces_rating * 1.5)
+                    }
 
-                    finalData.leetcode_rating = parseInt(res[2].data.userContestRanking.rating)
-                    finalData.total_score += (finalData.leetcode_rating*1.5)
-                    
+                    if (res[2] && res[2].data && res[2].data.userContestRanking && res[2].data.userContestRanking.rating) {
+                        finalData.leetcode_rating = parseInt(res[2].data.userContestRanking.rating)
+                        finalData.total_score += (finalData.leetcode_rating * 1.5)
+                    }
+
+
+
                     let gitScore = 0
-                    
+
                     for (const key in res[3].total) {
-                        if (res[3].total.hasOwnProperty(key)) {
+                        if (res[3] && res[3].total && res[3].total.hasOwnProperty(key)) {
                             gitScore += parseInt(res[3].total[key]);
                         }
                     }
