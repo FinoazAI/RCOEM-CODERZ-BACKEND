@@ -181,3 +181,45 @@ leetcode = {
 //     "github_id": "jhamadhav",
 //     "leetcode_id": "jhamadhav"
 //   }
+
+
+
+
+
+// Codechef & Codeforces & Leetcode
+// inasuma_eleven
+
+// Github
+// inazuma-elevenz
+
+
+// _id
+// 6522c4e79c037a72294c58b3
+// name
+// "Raunak Agrawal"
+// email
+// "agrawalrm_1@rknec.edu"
+// password
+// "Jaishrishyam@123"
+// codechef_id
+// "raunak45"
+// codeforces_id
+// "raunak45"
+// leetcode_id
+// "raunak45"
+// github_id
+// "agraunak45"
+// codechef_rating
+// 0
+// codeforces_rating
+// 0
+// leetcode_rating
+// 0
+// total_score
+// 0
+// avatar
+// "https://avatars.githubusercontent.com/u/146207981?v=4"
+// createdAt
+// 2023-10-08T15:04:07.438+00:00
+// __v
+// 0
