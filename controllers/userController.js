@@ -57,7 +57,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
     const user = await User.findOne({ "email": email });
 
-    if (user && user.password==password) {
+    if (user && user.password == password) {
 
         res.json({
             "success": true,
@@ -105,7 +105,7 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
     const regUser = await User.findOne({ "email": email });
 
     if (regUser) {
-        res.json({
+        return res.json({
             "success": false,
             "message": `User already registered!!`
         })
@@ -153,7 +153,35 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
             from: process.env.SMPT_MAIL,
             to: userEmail,
             subject: 'OTP - Rcoem Coderz',
-            text: `Heyy coder, your One Time Password (OTP) for email verification is ${OTP}. Thank You!!!`
+            text: `Heyy coder, your One Time Password (OTP) for email verification is ${OTP}. Thank You!!!`,
+            html: `
+            
+            Thank you for choosing RCOEM Coderz for your coding needs! 
+            <br>
+            To ensure the security of your account, we require a one-time password (OTP) verification.
+
+            <br><br>
+            <b>Please find your OTP below:</b>
+            <br><br>
+            <b>OTP: ${OTP}</b>
+
+            <br><br>
+            
+            Kindly enter <b>this OTP on the Login Page</b> to access your RCOEM Coderz account. 
+            <br>
+            <b>Please note that this OTP is valid for a limited time and should not be shared with anyone.</b>
+            
+            <br>
+
+            <p style="color: red; font-weight:700">If you did not request this OTP or have any concerns, please contact our support team immediately. <a href="https://www.linkedin.com/in/kush-munot/">Kush</a> and  <a href="https://www.linkedin.com/in/prathamesh-rajbhoj-2bb157200/">Pratham</a></p>
+            
+            <br>
+
+            Thank you for trusting RCOEM Coderz for your coding journey.
+            <br><br>
+            Best regards,<br/>
+            The RCOEM Coderz Team
+            `
         };
 
         await transporter.sendMail(mailOptions);
@@ -278,7 +306,7 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
-    const user = await User.findOneAndUpdate({"email": email}, {
+    const user = await User.findOneAndUpdate({ "email": email }, {
         email,
         password,
         codechef_id,
@@ -312,12 +340,12 @@ exports.reportUser = catchAsyncErrors(async (req, res, next) => {
 
 
     const data = {
-        "reported_against_name": name, 
+        "reported_against_name": name,
         "reported_by_name": reporter,
         "reported_by_email": email,
-        "is_codechef_invalid": codechef, 
-        "is_codeforces_invalid": codeforces, 
-        "is_leetcode_invalid": leetcode, 
+        "is_codechef_invalid": codechef,
+        "is_codeforces_invalid": codeforces,
+        "is_leetcode_invalid": leetcode,
         "is_github_invalid": github
     };
 

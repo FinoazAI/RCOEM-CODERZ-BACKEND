@@ -107,6 +107,8 @@ const updateRatings = catchAsyncErrors(async () => {
 
                     finalData.total_score += gitScore
 
+                    finalData.total_score = parseInt(finalData.total_score)
+
                     resolve(finalData)
                 }))
                 .catch((error) => {
