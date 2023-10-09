@@ -28,7 +28,19 @@ let promiseCall = (URL) => {
 }
 
 
+const emailDomainCheck = (input) => {
 
+    // input = JSON.stringify(input)
+
+    var parts = input.split("@");
+
+    if (parts.length === 2) {
+        if (parts[1] === "rknec.edu") {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 // Register a User
@@ -42,6 +54,10 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
     if (!name || !email || !password) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
+    }
+
+    if (!emailDomainCheck(email)) {
+        return next(new ErrorHander("Please enter your valid RKNEC domain email id", 400));
     }
 
     if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
@@ -142,6 +158,10 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHander("Email ID not found", 400));
     }
 
+
+    if (!emailDomainCheck(email)) {
+        return next(new ErrorHander("Please enter your valid RKNEC domain email id", 400));
+    }
 
     const regUser = await User.findOne({ "email": email });
 
@@ -495,8 +515,8 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
                 leetcode_id,
                 github_id,
             });
-        
-            
+
+
             res.json({
                 "success": true,
                 "message": `User (${user.email}) details updated successfully!!`
