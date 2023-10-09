@@ -4,8 +4,8 @@ const User = require("../models/userModel");
 const LeaderBoard = require("../models/ranklistModel");
 const OtpModel = require("../models/otpModel");
 const nodeMailer = require("nodemailer");
-const { google } = require("googleapis");
-const OAuth2 = google.auth.OAuth2;
+
+
 
 
 // Register a User
@@ -42,6 +42,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     })
 
 });
+
+
 
 
 // Login User
@@ -200,8 +202,6 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
 
 
 
-
-
 // verify OTP sent to email id of registered User
 exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
 
@@ -231,12 +231,6 @@ exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
         res.json({
             "success": true,
             "isvalid": true,
-            "name": user.name,
-            "password": user.password,
-            "github_id": user.github_id,
-            "codechef_id": user.codechef_id,
-            "codeforces_id": user.codeforces_id,
-            "leetcode_id": user.leetcode_id,
             "message": `Rknec email id verified successfully `
         })
     }
@@ -258,43 +252,179 @@ exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
 
 
 
+// verify OTP sent to email id of registered User
+exports.sendUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
+
+    const { email } = req.body;
+
+    console.log("email recieved for OTP: ", email);
+
+    if (!email) {
+        return next(new ErrorHander("Email not found, please try again", 400));
+    }
+
+
+    const regUser = await User.findOne({ "email": email });
+
+    if (!regUser) {
+        return next(new ErrorHander("This email is not registered!!", 400));
+    }
+
+
+    const sendEmail = async (userEmail) => {
+
+        const transporter = nodeMailer.createTransport({
+            // host: process.env.SMPT_HOST,
+            port: process.env.SMPT_PORT,
+            service: process.env.SMPT_SERVICE,
+            secure: true,
+            logger: true,
+            debug: true,
+            secureConnection: false,
+            auth: {
+                user: process.env.SMPT_MAIL,
+                pass: process.env.SMPT_PASSWORD,
+            },
+            tls: {
+                rejectUnAuthorized: false
+            }
+        });
+
+
+        let user = await OtpModel.findOne({ "email": userEmail });
+
+        if (!user) {
+
+            const x = await OtpModel.create({
+                email: userEmail
+            });
+        }
+
+        user = await OtpModel.findOne({ "email": userEmail });
+
+        user.generateOTP();
+
+        await user.save({ validateBeforeSave: false });
+
+        const OTP = user.emailVerificationOTP;
+
+        const mailOptions = {
+            from: process.env.SMPT_MAIL,
+            to: userEmail,
+            subject: 'OTP - Rcoem Coderz',
+            text: `Heyy coder, your One Time Password (OTP) for user verification is ${OTP}. Thank You!!!`,
+            html: `
+            
+            Thank you for choosing RCOEM Coderz for your coding needs! 
+            <br>
+            To ensure the security of your account, we require a one-time password (OTP) verification.
+
+            <br><br>
+            <b>Please find your OTP below:</b>
+            <br><br>
+            <b>OTP: ${OTP}</b>
+
+            <br><br>
+            
+            Kindly enter <b>this OTP on the Edit Profile Page</b> to edit your RCOEM Coderz account details. 
+            <br>
+            <b>Please note that this OTP is valid for a limited time and should not be shared with anyone.</b>
+            
+            <br>
+
+            <p style="color: red; font-weight:700">If you did not request this OTP or have any concerns, please contact our support team immediately. <a href="https://www.linkedin.com/in/kush-munot/">Kush</a> and  <a href="https://www.linkedin.com/in/prathamesh-rajbhoj-2bb157200/">Pratham</a></p>
+            
+            <br>
+
+            Thank you for trusting RCOEM Coderz for your coding journey.
+            <br><br>
+            Best regards,<br/>
+            The RCOEM Coderz Team
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        // console.log("email sent");
+    };
+
+    await sendEmail(email);
+
+    console.log('Email sent successfully');
+
+    res.json({
+        "success": true,
+        "message": `OTP sent successfully!!`
+    })
+
+});
+
+
 
 
 
 // get profile data for profile page
-exports.getProfile = catchAsyncErrors(async (req, res, next) => {
+exports.verifyUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
 
-    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
+    const { email, otp } = req.body;
 
+    // console.log("data recieved: ", email, otp);
 
-    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id);
-
-    if (!name || !email || !password) {
-        return next(new ErrorHander("All fields are compulsory!!!", 400));
+    if (!email || !otp) {
+        return next(new ErrorHander("Sufficient data not found", 400));
     }
 
-    if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
-        return next(new ErrorHander("Enter atleast one platform details", 400));
+    const user = await OtpModel.findOne({ "email": email });
+
+    if (!user) {
+        return next(new ErrorHander("No user/OTP found", 400));
     }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        codechef_id,
-        codeforces_id,
-        leetcode_id,
-        github_id,
-        avatar: "https://www.nicepng.com/png/detail/804-8049853_med-boukrima-specialist-webmaster-php-e-commerce-web.png"
-    });
+    // console.log("user: ", user)
 
+    let isValid = await user.verifyOTP(otp);
+
+    // await user.save({ validateBeforeSave: false });
+
+    // console.log("isvalid: ", isValid)
+
+    if (isValid) {
+
+
+        let userdata = await User.findOne({"email": email});
+
+        if(!userdata){
+            return next(new ErrorHander("User not found, please register", 400));
+        }
+
+        res.json({
+            "success": true,
+            "isvalid": true,
+            "name": userdata.name,
+            "password": userdata.password,
+            "github_id": userdata.github_id,
+            "codechef_id": userdata.codechef_id,
+            "codeforces_id": userdata.codeforces_id,
+            "leetcode_id": userdata.leetcode_id,
+            "message": `User Verified successfully `
+        })
+    }
+    else {
+        res.json({
+            "success": true,
+            "isvalid": false,
+            "message": `Invalid/Expired OTP`
+        })
+    }
 
     res.json({
-        "success": true,
-        "message": `User (${user.email}) Registered Successfully!!`
+        "success": false,
+        "message": `User validation failed`
     })
 
 });
+
+
 
 
 // update profile data for profile page
@@ -325,6 +455,7 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
     })
 
 });
+
 
 
 

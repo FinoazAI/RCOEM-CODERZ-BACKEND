@@ -82,6 +82,10 @@ const updateRatings = catchAsyncErrors(async () => {
             let p3 = new Promise(promiseCall(process.env.LEETCODE_API + lc_id))
             let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + ghub_id))
 
+
+
+            
+
             Promise.all([p1, p2, p3, p4])
                 .then(((res) => {
                     // console.log("Response ALL ", res)

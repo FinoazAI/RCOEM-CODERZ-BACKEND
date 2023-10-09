@@ -5,6 +5,8 @@ const {
     loginUser,
     sendOTP,
     verifyOTP,
+    sendUpdateProfileOTP,
+    verifyUpdateProfileOTP,
     updateProfile,
     reportUser
 } = require("../controllers/userController");
@@ -17,6 +19,8 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/sendOTP", sendOTP);
 router.post("/verifyOTP", verifyOTP);
+router.post("/sendUpdateProfileOTP", sendUpdateProfileOTP);
+router.post("/verifyUpdateProfileOTP", verifyUpdateProfileOTP);
 router.patch("/updateProfile", updateProfile);
 router.post("/report", reportUser);
 
