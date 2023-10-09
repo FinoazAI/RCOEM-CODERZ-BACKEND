@@ -4,6 +4,29 @@ const User = require("../models/userModel");
 const LeaderBoard = require("../models/ranklistModel");
 const OtpModel = require("../models/otpModel");
 const nodeMailer = require("nodemailer");
+const fetch = require("node-fetch");
+
+
+
+// General function to Fetch data from {CC, CF, LC} Apis 
+let promiseCall = (URL) => {
+
+    return (resolve, reject) => {
+        fetch(URL)
+            .then((response) => {
+                return response.json()
+            })
+            .then((jsonResponse) => {
+                // console.log(URL, jsonResponse)
+                resolve(jsonResponse);
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    }
+
+}
+
 
 
 
@@ -25,21 +48,37 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHander("Enter atleast one platform details", 400));
     }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        codechef_id,
-        codeforces_id,
-        leetcode_id,
-        github_id,
-    });
+
+    let p1 = new Promise(promiseCall(process.env.CODECHEF_API + codechef_id))
+    let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + codeforces_id))
+    let p3 = new Promise(promiseCall(process.env.LEETCODE_API + leetcode_id))
+    let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
+
+    Promise.all([p1, p2, p3, p4])
+        .then(async() => {
+
+            const user = await User.create({
+                name,
+                email,
+                password,
+                codechef_id,
+                codeforces_id,
+                leetcode_id,
+                github_id,
+            });
 
 
-    res.json({
-        "success": true,
-        "message": `User (${user.email}) Registered Successfully!!`
-    })
+            res.json({
+                "success": true,
+                "message": `User (${user.email}) Registered Successfully!!`
+            })
+
+        })
+        .catch((err)=>{
+            return next(new ErrorHander("Invalid username found, please enter valid details", 400));
+        })
+
+
 
 });
 
@@ -391,9 +430,9 @@ exports.verifyUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
     if (isValid) {
 
 
-        let userdata = await User.findOne({"email": email});
+        let userdata = await User.findOne({ "email": email });
 
-        if(!userdata){
+        if (!userdata) {
             return next(new ErrorHander("User not found, please register", 400));
         }
 

@@ -80,12 +80,9 @@ const updateRatings = catchAsyncErrors(async () => {
             let p1 = new Promise(promiseCall(process.env.CODECHEF_API + cc_id))
             let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + cf_id))
             let p3 = new Promise(promiseCall(process.env.LEETCODE_API + lc_id))
-            let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + ghub_id))
-
-
+            let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + ghub_id))            
 
             
-
             Promise.all([p1, p2, p3, p4])
                 .then(((res) => {
                     // console.log("Response ALL ", res)

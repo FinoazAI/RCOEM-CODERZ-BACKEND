@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const updateRatings = require("./updateDB");
 
 
+
+
 const connectDatabase = () => {
     mongoose
         .connect(process.env.DB_URI, {
