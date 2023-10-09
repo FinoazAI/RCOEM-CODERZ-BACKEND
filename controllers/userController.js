@@ -496,12 +496,12 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
                 github_id,
             });
         
-        
+            
             res.json({
                 "success": true,
                 "message": `User (${user.email}) details updated successfully!!`
             })
-            
+
         })
         .catch((err) => {
             return next(new ErrorHander("Invalid username found, please enter valid usernames", 400));
