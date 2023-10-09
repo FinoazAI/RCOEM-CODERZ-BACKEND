@@ -14,7 +14,7 @@ const connectDatabase = () => {
             updateRatings();
 
             // const UpdateIntervalTime = 43200000;
-            const UpdateIntervalTime = 60 * 60 * 1000;
+            const UpdateIntervalTime = 3 * 60 * 1000;
 
             setInterval(() => {
 
