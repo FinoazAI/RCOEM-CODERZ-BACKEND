@@ -55,7 +55,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
 
     Promise.all([p1, p2, p3, p4])
-        .then(async() => {
+        .then(async () => {
 
             const user = await User.create({
                 name,
@@ -74,8 +74,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
             })
 
         })
-        .catch((err)=>{
-            return next(new ErrorHander("Invalid username found, please enter valid details", 400));
+        .catch((err) => {
+            return next(new ErrorHander("Invalid username found, please enter valid usernames", 400));
         })
 
 
@@ -478,20 +478,34 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
-    const user = await User.findOneAndUpdate({ "email": email }, {
-        email,
-        password,
-        codechef_id,
-        codeforces_id,
-        leetcode_id,
-        github_id,
-    });
 
+    let p1 = new Promise(promiseCall(process.env.CODECHEF_API + codechef_id))
+    let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + codeforces_id))
+    let p3 = new Promise(promiseCall(process.env.LEETCODE_API + leetcode_id))
+    let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
 
-    res.json({
-        "success": true,
-        "message": `User (${user.email}) details updated successfully!!`
-    })
+    Promise.all([p1, p2, p3, p4])
+        .then(async () => {
+
+            const user = await User.findOneAndUpdate({ "email": email }, {
+                email,
+                password,
+                codechef_id,
+                codeforces_id,
+                leetcode_id,
+                github_id,
+            });
+        
+        
+            res.json({
+                "success": true,
+                "message": `User (${user.email}) details updated successfully!!`
+            })
+            
+        })
+        .catch((err) => {
+            return next(new ErrorHander("Invalid username found, please enter valid usernames", 400));
+        })
 
 });
 
