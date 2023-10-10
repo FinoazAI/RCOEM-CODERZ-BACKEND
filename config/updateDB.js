@@ -108,7 +108,7 @@ const updateRatings = catchAsyncErrors(async () => {
 
                     for (const key in res[3].total) {
                         if (res[3] && res[3].total && res[3].total.hasOwnProperty(key)) {
-                            gitScore += parseInt(res[3].total[key]);
+                            gitScore += parseInt((res[3].total[key])/30);
                         }
                     }
 
