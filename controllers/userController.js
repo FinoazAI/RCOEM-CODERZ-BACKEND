@@ -28,7 +28,7 @@ let promiseCall = (URL) => {
 }
 
 
-const emailDomainCheck = (input) => {
+/* const emailDomainCheck = (input) => {
 
     // input = JSON.stringify(input)
 
@@ -40,7 +40,7 @@ const emailDomainCheck = (input) => {
         }
     }
     return false;
-}
+} */
 
 
 // Register a User
@@ -48,17 +48,17 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
     // { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } 
 
-    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
+    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name } = req.body;
 
-    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id);
+    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name);
 
     if (!name || !email || !password) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
-    if (!emailDomainCheck(email)) {
+    /* if (!emailDomainCheck(email)) {
         return next(new ErrorHander("Please enter your valid RKNEC domain email id", 400));
-    }
+    } */
 
     if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
         return next(new ErrorHander("Enter atleast one platform details", 400));
@@ -81,6 +81,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
                 codeforces_id,
                 leetcode_id,
                 github_id,
+                college_name,
             });
 
 
@@ -125,6 +126,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
             "codechef_id": user.codechef_id,
             "codeforces_id": user.codeforces_id,
             "leetcode_id": user.leetcode_id,
+            "college_name": user.college_name,
             "message": `Credentials verified successfully!!`
         })
 
@@ -159,9 +161,9 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
     }
 
 
-    if (!emailDomainCheck(email)) {
+    /* if (!emailDomainCheck(email)) {
         return next(new ErrorHander("Please enter your valid RKNEC domain email id", 400));
-    }
+    } */
 
     const regUser = await User.findOne({ "email": email });
 

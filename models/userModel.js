@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: [true, "Please Enter Your Password"],
         },
+        college_name: {
+            type: String,
+        },
         forgotPasswordOTP: {
             type: String
         },
@@ -52,10 +55,6 @@ const userSchema = new mongoose.Schema(
         total_score: {
             type: Number,
             default: 0
-        },
-        avatar: {
-            type: String,
-            default: "https://avatars.githubusercontent.com/u/146207981?v=4"
         },
         createdAt: {
             type: Date,

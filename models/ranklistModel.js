@@ -16,6 +16,7 @@ const ranklistSchema = new mongoose.Schema(
                 leetcode_rating: { type: Number },
                 github_id: { type: String },
                 avatar: { type: String },
+                college_name: { type: String },
             },
         ],
         codechef_ranklist: [
@@ -31,6 +32,7 @@ const ranklistSchema = new mongoose.Schema(
                 leetcode_rating: { type: Number },
                 github_id: { type: String },
                 avatar: { type: String },
+                college_name: { type: String },
             },
         ],
         codeforces_ranklist: [
@@ -46,6 +48,7 @@ const ranklistSchema = new mongoose.Schema(
                 leetcode_rating: { type: Number },
                 github_id: { type: String },
                 avatar: { type: String },
+                college_name: { type: String },
             },
         ],
         leetcode_ranklist: [
@@ -61,6 +64,7 @@ const ranklistSchema = new mongoose.Schema(
                 leetcode_rating: { type: Number },
                 github_id: { type: String },
                 avatar: { type: String },
+                college_name: { type: String },
             },
         ],
         updatedAt: {
