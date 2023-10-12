@@ -22,6 +22,9 @@ app.use(cors({
         'https://rcoem-coderz.netlify.app', 
         'https://rcoem-coderz.netlify.app/', 
         'https://rcoem-coderz.netlify.app/*', 
+        'https://indian-coderz.netlify.app', 
+        'https://indian-coderz.netlify.app/', 
+        'https://indian-coderz.netlify.app/*', 
         '*'
     ],
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
