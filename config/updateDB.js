@@ -97,12 +97,12 @@ const updateRatings = catchAsyncErrors(async () => {
 
                     
                     if (res[1] && res[1][0] && res[1][0].rating && res[1][0].maxRating) {
-                        finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating + (2 * (res[1][1].ratings.length && res[1][1].ratings.length >= 1) ? (res[1][1].ratings.length) : 0)
+                        finalData.codeforces_rating = res[1][0].rating + res[1][0].maxRating /*+  (2 * (res[1][1].ratings.length && res[1][1].ratings.length >= 1) ? (res[1][1].ratings.length) : 0) */
                         finalData.total_score += (finalData.codeforces_rating * 1.5)
                     }
 
                     if (res[2] && res[2].data && res[2].data.userContestRanking && res[2].data.userContestRanking.rating) {
-                        finalData.leetcode_rating = parseInt(res[2].data.userContestRanking.rating) + 3 * parseInt(res[2].data.userContestRanking.attendedContestsCount)
+                        finalData.leetcode_rating = parseInt(res[2].data.userContestRanking.rating) /* + 3 * parseInt(res[2].data.userContestRanking.attendedContestsCount) */
                         finalData.total_score += (finalData.leetcode_rating * 1.5)
                     }
 
