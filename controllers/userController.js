@@ -606,3 +606,20 @@ exports.reportUser = catchAsyncErrors(async (req, res, next) => {
 
 
 
+
+
+
+
+// copy user database content -- data loss issue
+exports.getUserDBcopy = catchAsyncErrors(async (req, res, next) => {
+
+    const data = await User.find({});
+
+    res.json({
+        "success": true,
+        "message": `User Database fetched succesfully @${Date(Date.now()).toString()}`,
+        "total users": data.length,
+        "data": data
+    })
+
+});

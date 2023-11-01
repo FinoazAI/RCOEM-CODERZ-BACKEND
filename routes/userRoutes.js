@@ -8,7 +8,8 @@ const {
     sendUpdateProfileOTP,
     verifyUpdateProfileOTP,
     updateProfile,
-    reportUser
+    reportUser,
+    getUserDBcopy
 } = require("../controllers/userController");
 
 
@@ -23,6 +24,7 @@ router.post("/sendUpdateProfileOTP", sendUpdateProfileOTP);
 router.post("/verifyUpdateProfileOTP", verifyUpdateProfileOTP);
 router.patch("/updateProfile", updateProfile);
 router.post("/report", reportUser);
+router.get("/getDBcopy", getUserDBcopy);
 
 
 module.exports = router;
