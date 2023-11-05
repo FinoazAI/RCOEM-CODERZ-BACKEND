@@ -50,6 +50,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
     const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name } = req.body;
 
+    
+
     console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name);
 
     if (!name || !email || !password) {
