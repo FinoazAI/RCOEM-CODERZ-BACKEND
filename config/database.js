@@ -13,16 +13,16 @@ const connectDatabase = () => {
         .then((data) => {
             console.log(`Mongodb connected with server`);
 
-            updateRatings();
+            // updateRatings();
 
             // const UpdateIntervalTime = 43200000;
-            const UpdateIntervalTime = 4 * 60 * 60 * 1000;
+            // const UpdateIntervalTime = 4 * 60 * 60 * 1000;
 
-            setInterval(() => {
+            // setInterval(() => {
 
-                updateRatings();
+            //     updateRatings();
 
-            }, UpdateIntervalTime)
+            // }, UpdateIntervalTime)
         });
 };
 

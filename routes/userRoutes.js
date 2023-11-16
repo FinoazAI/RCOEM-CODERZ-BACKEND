@@ -29,6 +29,6 @@ router.patch("/updateProfile", updateProfile);
 router.post("/report", reportUser);
 router.get("/getDBcopy", getUserDBcopy);
 
-router.post("/cron_update_db", cron_update_db);
+router.get("/cron_update_db", cron_update_db);
 
 module.exports = router;
