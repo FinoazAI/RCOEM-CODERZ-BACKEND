@@ -39,7 +39,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
     let { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name, geeksforgeeks_id } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !college_name) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
@@ -66,8 +66,13 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     let p1 = new Promise(promiseCall(process.env.CODECHEF_API + codechef_id))
     let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + codeforces_id))
     let p3 = new Promise(promiseCall(process.env.LEETCODE_API + leetcode_id))
-    let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
+    // let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
     let p5 = new Promise(promiseCall(process.env.GFG_API + geeksforgeeks_id))
+
+
+    let p4 = new Promise((resolve, reject) => {
+        resolve()
+    })
 
 
     Promise.all([p1, p2, p3, p4, p5])
@@ -94,7 +99,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         })
         .catch((err) => {
             console.log("Error while registering user: ", err)
-            console.log("User Details: ", name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name);
+            console.log("User Details: ", name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, geeksforgeeks_id, college_name);
             return next(new ErrorHander("Invalid username found, please enter valid usernames", 400));
         })
 
@@ -529,11 +534,15 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
     let p1 = new Promise(promiseCall(process.env.CODECHEF_API + codechef_id))
     let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + codeforces_id))
     let p3 = new Promise(promiseCall(process.env.LEETCODE_API + leetcode_id))
-    let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
+    // let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
     let p5 = new Promise(promiseCall(process.env.GFG_API + geeksforgeeks_id))
 
+    let p4 = new Promise((resolve, reject) => {
+        resolve()
+    })
 
-    Promise.all([p1, p2, p3, p4])
+
+    Promise.all([p1, p2, p3, p4, p5])
         .then(async () => {
 
             const user = await User.findOneAndUpdate({ "email": email }, {
