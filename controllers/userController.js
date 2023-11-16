@@ -481,6 +481,7 @@ exports.verifyUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
             "codechef_id": userdata.codechef_id,
             "codeforces_id": userdata.codeforces_id,
             "leetcode_id": userdata.leetcode_id,
+            "geeksforgeeks_id": userdata.geeksforgeeks_id,
             "message": `User Verified successfully `
         })
     }
