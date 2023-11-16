@@ -59,7 +59,14 @@ const userSchema = new mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-        }
+        },
+        geeksforgeeks_id: {
+            type: String,
+        },
+        geeksforgeeks_rating: {
+            type: Number,
+            default: 0
+        },
     }
 );
 

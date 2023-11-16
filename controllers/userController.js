@@ -28,51 +28,47 @@ let promiseCall = (URL) => {
 }
 
 
-/* const emailDomainCheck = (input) => {
-
-    // input = JSON.stringify(input)
-
-    var parts = input.split("@");
-
-    if (parts.length === 2) {
-        if (parts[1] === "rknec.edu") {
-            return true;
-        }
-    }
-    return false;
-} */
 
 
 // Register a User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
-    // { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id } 
+    // Fields: [name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name, geeksforgeeks_id] 
 
-    const { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name } = req.body;
-
-    
-
-    console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name);
+    let { name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name, geeksforgeeks_id } = req.body;
 
     if (!name || !email || !password) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
 
-    /* if (!emailDomainCheck(email)) {
-        return next(new ErrorHander("Please enter your valid RKNEC domain email id", 400));
-    } */
 
-    if (!codechef_id && !leetcode_id && !codeforces_id && !github_id) {
+    if (!codechef_id || !leetcode_id || !codeforces_id || !github_id || !geeksforgeeks_id) {
         return next(new ErrorHander("Enter atleast one platform details", 400));
     }
+
+
+    name = name.trim();
+    email = email.trim();
+    password = password.trim();
+    codechef_id = codechef_id.trim();
+    codeforces_id = codeforces_id.trim();
+    leetcode_id = leetcode_id.trim();
+    github_id = github_id.trim();
+    college_name = college_name.trim();
+    geeksforgeeks_id = geeksforgeeks_id.trim();
+
+    // console.log(name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name);
+
 
 
     let p1 = new Promise(promiseCall(process.env.CODECHEF_API + codechef_id))
     let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + codeforces_id))
     let p3 = new Promise(promiseCall(process.env.LEETCODE_API + leetcode_id))
     let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
+    let p5 = new Promise(promiseCall(process.env.GFG_API + geeksforgeeks_id))
 
-    Promise.all([p1, p2, p3, p4])
+
+    Promise.all([p1, p2, p3, p4, p5])
         .then(async () => {
 
             const user = await User.create({
@@ -84,6 +80,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
                 leetcode_id,
                 github_id,
                 college_name,
+                geeksforgeeks_id
             });
 
 
@@ -94,6 +91,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
         })
         .catch((err) => {
+            console.log("Error while registering user: ", err)
+            console.log("User Details: ", name, email, password, codechef_id, codeforces_id, leetcode_id, github_id, college_name);
             return next(new ErrorHander("Invalid username found, please enter valid usernames", 400));
         })
 
@@ -107,13 +106,16 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 // Login User
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
-    const { email, password } = req.body;
-
-    console.log("data : ", email, password);
+    let { email, password } = req.body;
 
     if (!email || !password) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
+
+    email = email.trim();
+    password = password.trim();
+
+    console.log("data : ", email, password);
 
     const user = await User.findOne({ "email": email });
 
@@ -154,13 +156,15 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 // send OTP to email id of registered User
 exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
 
-    const { email } = req.body;
-
-    console.log("email recieved for OTP: ", email);
+    let { email } = req.body;
 
     if (!email) {
         return next(new ErrorHander("Email ID not found", 400));
     }
+
+    email = email.trim();
+
+    console.log("email recieved for OTP: ", email);
 
 
     /* if (!emailDomainCheck(email)) {
@@ -268,13 +272,16 @@ exports.sendOTP = catchAsyncErrors(async (req, res, next) => {
 // verify OTP sent to email id of registered User
 exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
 
-    const { email, otp } = req.body;
-
-    console.log("data recieved: ", email, otp);
+    let { email, otp } = req.body;
 
     if (!email || !otp) {
         return next(new ErrorHander("Sufficient data not found", 400));
     }
+
+    email = email.trim();
+    otp = otp.trim();
+
+    console.log("data recieved: ", email, otp);
 
     const user = await OtpModel.findOne({ "email": email });
 
@@ -318,13 +325,15 @@ exports.verifyOTP = catchAsyncErrors(async (req, res, next) => {
 // verify OTP sent to email id of registered User
 exports.sendUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
 
-    const { email } = req.body;
-
-    console.log("email recieved for OTP: ", email);
+    let { email } = req.body;
 
     if (!email) {
         return next(new ErrorHander("Email not found, please try again", 400));
     }
+
+    email = email.trim();
+
+    console.log("email recieved for OTP: ", email);
 
 
     const regUser = await User.findOne({ "email": email });
@@ -429,13 +438,16 @@ exports.sendUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
 // get profile data for profile page
 exports.verifyUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
 
-    const { email, otp } = req.body;
+    let { email, otp } = req.body;
 
     // console.log("data recieved: ", email, otp);
 
     if (!email || !otp) {
         return next(new ErrorHander("Sufficient data not found", 400));
     }
+
+    email = email.trim();
+    otp = otp.trim();
 
     const user = await OtpModel.findOne({ "email": email });
 
@@ -493,20 +505,30 @@ exports.verifyUpdateProfileOTP = catchAsyncErrors(async (req, res, next) => {
 // update profile data for profile page
 exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 
-    const { email, password, codechef_id, codeforces_id, leetcode_id, github_id } = req.body;
+    let { email, password, codechef_id, codeforces_id, leetcode_id, github_id, geeksforgeeks_id } = req.body;
 
 
-    console.log(email, password, codechef_id, codeforces_id, leetcode_id, github_id);
+    console.log(email, password, codechef_id, codeforces_id, leetcode_id, github_id, geeksforgeeks_id);
 
-    if (!email || !password || !codechef_id || !leetcode_id || !codeforces_id || !github_id) {
+    if (!email || !password || !codechef_id || !leetcode_id || !codeforces_id || !github_id || !geeksforgeeks_id) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
+
+    email = email.trim();
+    password = password.trim();
+    codechef_id = codechef_id.trim();
+    codeforces_id = codeforces_id.trim();
+    leetcode_id = leetcode_id.trim();
+    github_id = github_id.trim();
+    geeksforgeeks_id = geeksforgeeks_id.trim();
 
 
     let p1 = new Promise(promiseCall(process.env.CODECHEF_API + codechef_id))
     let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + codeforces_id))
     let p3 = new Promise(promiseCall(process.env.LEETCODE_API + leetcode_id))
     let p4 = new Promise(promiseCall(process.env.GITHUB_API1 + github_id))
+    let p5 = new Promise(promiseCall(process.env.GFG_API + geeksforgeeks_id))
+
 
     Promise.all([p1, p2, p3, p4])
         .then(async () => {
@@ -518,6 +540,7 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
                 codeforces_id,
                 leetcode_id,
                 github_id,
+                geeksforgeeks_id
             });
 
 
@@ -539,15 +562,24 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 // forgot password - set new password
 exports.reportUser = catchAsyncErrors(async (req, res, next) => {
 
-    console.log(11111)
 
-    const { name, email, reporter, codechef, codeforces, leetcode, github } = req.body;
+    let { name, email, reporter, codechef, codeforces, leetcode, github } = req.body;
 
-    console.log(name, email, reporter, codechef, codeforces, leetcode, github);
+
+    // console.log(name, email, reporter, codechef, codeforces, leetcode, github);
 
     if (!name || !email || !reporter || !codechef || !codeforces || !leetcode || !github) {
         return next(new ErrorHander("All fields are compulsory!!!", 400));
     }
+
+
+    name = name.trim();
+    email = email.trim();
+    reporter = reporter.trim();
+    codechef = codechef.trim();
+    codeforces = codeforces.trim();
+    leetcode = leetcode.trim();
+    github = github.trim();
 
 
     const data = {
@@ -560,7 +592,7 @@ exports.reportUser = catchAsyncErrors(async (req, res, next) => {
         "is_github_invalid": github
     };
 
-    console.log(data)
+    // console.log(data)
 
 
     const sendEmail = async (userEmail) => {

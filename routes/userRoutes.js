@@ -9,7 +9,7 @@ const {
     verifyUpdateProfileOTP,
     updateProfile,
     reportUser,
-    getUserDBcopy
+    getUserDBcopy,
 } = require("../controllers/userController");
 
 
