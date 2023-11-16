@@ -5,6 +5,7 @@ const LeaderBoard = require("../models/ranklistModel");
 const OtpModel = require("../models/otpModel");
 const nodeMailer = require("nodemailer");
 const fetch = require("node-fetch");
+const updateRatings = require("../config/updateDB");
 
 
 
@@ -655,6 +656,21 @@ exports.getUserDBcopy = catchAsyncErrors(async (req, res, next) => {
         "message": `User Database fetched succesfully @${Date(Date.now()).toString()}`,
         "total users": data.length,
         "data": data
+    })
+
+});
+
+
+
+
+// copy user database content -- data loss issue
+exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
+
+    await updateRatings
+
+    res.json({
+        "success": true,
+        "message": `Database updated succesfully @${Date(Date.now()).toString()}`,
     })
 
 });

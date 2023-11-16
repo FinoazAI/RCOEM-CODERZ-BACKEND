@@ -10,6 +10,7 @@ const {
     updateProfile,
     reportUser,
     getUserDBcopy,
+    cron_update_db
 } = require("../controllers/userController");
 
 const updateRatings = require("../config/updateDB");
@@ -28,6 +29,6 @@ router.patch("/updateProfile", updateProfile);
 router.post("/report", reportUser);
 router.get("/getDBcopy", getUserDBcopy);
 
-router.post("/cron_update_db", updateRatings);
+router.post("/cron_update_db", cron_update_db);
 
 module.exports = router;

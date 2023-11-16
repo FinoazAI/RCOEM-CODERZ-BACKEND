@@ -114,7 +114,7 @@ const updateRatings = catchAsyncErrors(async () => {
                 Promise.allSettled([p1, p2, p3, p4, p5])
                     .then(((res) => {
 
-                        // console.log("Response ALL ", res)
+                        console.log("Response ALL ", res)
                         // console.log(name)
 
 
@@ -205,6 +205,8 @@ const updateRatings = catchAsyncErrors(async () => {
                             let gfgScore = 0
                             let scores = res[4].value.data;
 
+                            console.log("scores: ", scores)
+
                             gfgScore += (scores.Basic);
                             gfgScore += (scores.Easy * 2);
                             gfgScore += (scores.Medium * 4);
@@ -244,8 +246,8 @@ const updateRatings = catchAsyncErrors(async () => {
 
             PromiseList.push(p);
 
-            // if(PromiseList.length >= 99)
-            //     break;
+            if(PromiseList.length >= 4)
+                break;
 
     }
 
