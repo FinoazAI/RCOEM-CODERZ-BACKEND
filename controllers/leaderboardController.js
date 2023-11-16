@@ -62,3 +62,18 @@ exports.get_totalScore_leaderboard = catchAsyncErrors(async (req, res, next) => 
     })
 
 });
+
+// Get Latest GFG Leaderboard
+exports.get_geeksforgeeks_leaderboard = catchAsyncErrors(async (req, res, next) => {
+
+    const leaderboard = await LeaderBoard.findOne({}, {_id:0, __v:0});
+    const totalScore = leaderboard.geeksforgeeks_ranklist
+    const updatedAt = leaderboard.updatedAt
+
+    res.json({
+        "success" : true,
+        "data": totalScore,
+        updatedAt
+    })
+
+});
