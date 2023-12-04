@@ -90,7 +90,7 @@ const updateRatings = catchAsyncErrors(async () => {
                 let p1 = new Promise(promiseCall(process.env.CODECHEF_API + cc_id))
                 let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + cf_id))
                 let p3 = new Promise(promiseCall(process.env.LEETCODE_API + lc_id))
-                // let p4 = new Promise(promiseCall(process.env.GITHUB_API1))
+                let p4 = new Promise(promiseCall(process.env.GITHUB_API2 + ghub_id))
                 let p5 = new Promise(promiseCall(process.env.GFG_API + gfg_id))
 
                 // let p1 = new Promise((resolve, reject)=>{
@@ -102,9 +102,9 @@ const updateRatings = catchAsyncErrors(async () => {
                 // let p3 = new Promise((resolve, reject)=>{
                 //     resolve()
                 // })
-                let p4 = new Promise((resolve, reject) => {
-                    resolve()
-                })
+                // let p4 = new Promise((resolve, reject) => {
+                //     resolve()
+                // })
                 // let p5 = new Promise((resolve, reject)=>{
                 //     return resolve()
                 // })
@@ -115,7 +115,7 @@ const updateRatings = catchAsyncErrors(async () => {
                     .then(((res) => {
 
                         console.log("Response ALL ", res)
-                        // console.log(name)
+                        console.log(name)
 
 
 
@@ -170,26 +170,28 @@ const updateRatings = catchAsyncErrors(async () => {
 
                         ////////////////// github score calculation //////////////////
 
-                        // if (
-                        //     res[3] &&
-                        //     res[3].status === "fulfilled" &&
-                        //     res[3].value &&
-                        //     res[3].value.total
-                        // ) {
+                        if (
+                            res[3]
+                            // res[3] &&
+                            // res[3].status === "fulfilled" &&
+                            // res[3].value 
+                        ) {
 
-                        //     let gitScore = 0
+                            let gitScore = 0
 
-                        //     for (const key in res[3].value.total) {
-                        //         if (res[3] && res[3].value.total && res[3].value.total.hasOwnProperty(key)) {
-                        //             gitScore += parseInt((res[3].total[key]) / 30);
-                        //         }
-                        //     }
+                            console.log(res[3].value)
 
-                        //     // console.log(name, gitScore)
+                            // for (const key in res[3].value.total) {
+                            //     if (res[3] && res[3].value.total && res[3].value.total.hasOwnProperty(key)) {
+                            //         gitScore += parseInt((res[3].total[key]) / 30);
+                            //     }
+                            // }
 
-                        //     finalData.total_score += gitScore
+                            // console.log(name, gitScore)
 
-                        // }
+                            finalData.total_score += gitScore
+
+                        }
 
 
                         ////////////////// gfg score calculation //////////////////
@@ -246,7 +248,7 @@ const updateRatings = catchAsyncErrors(async () => {
 
             PromiseList.push(p);
 
-            if(PromiseList.length >= 4)
+            if(PromiseList.length >= 2)
                 break;
 
     }
@@ -301,24 +303,24 @@ const updateRatings = catchAsyncErrors(async () => {
 
             // ......UPDATE MONGODB......
 
-            let x = mongoose.connection.collections.leaderboards
-            // console.log(x)
+            // let x = mongoose.connection.collections.leaderboards
+            // // console.log(x)
 
-            if (x) {
-                await LeaderBoard.deleteMany({})
-            }
+            // if (x) {
+            //     await LeaderBoard.deleteMany({})
+            // }
 
-            const updatedList = await LeaderBoard.create(
-                {
-                    ...Ranklist
-                }
-            );
+            // const updatedList = await LeaderBoard.create(
+            //     {
+            //         ...Ranklist
+            //     }
+            // );
 
 
             console.log({
                 "success": true,
                 "message": `Leaderboard Updated Successfully!!`,
-                "leaderboard": updatedList
+                // "leaderboard": updatedList
             })
 
 

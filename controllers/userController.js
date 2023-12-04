@@ -735,7 +735,7 @@ exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
             let p1 = new Promise(promiseCall(process.env.CODECHEF_API + cc_id))
             let p2 = new Promise(promiseCall(process.env.CODEFORCES_API + cf_id))
             let p3 = new Promise(promiseCall(process.env.LEETCODE_API + lc_id))
-            // let p4 = new Promise(promiseCall(process.env.GITHUB_API1))
+            let p4 = new Promise(promiseCall(process.env.GITHUB_API2 + ghub_id))
             let p5 = new Promise(promiseCall(process.env.GFG_API + gfg_id))
 
             // let p1 = new Promise((resolve, reject)=>{
@@ -747,9 +747,9 @@ exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
             // let p3 = new Promise((resolve, reject)=>{
             //     resolve()
             // })
-            let p4 = new Promise((resolve, reject) => {
-                resolve()
-            })
+            // let p4 = new Promise((resolve, reject) => {
+            //     resolve()
+            // })
             // let p5 = new Promise((resolve, reject)=>{
             //     return resolve()
             // })
@@ -815,26 +815,30 @@ exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
 
                     ////////////////// github score calculation //////////////////
 
-                    // if (
-                    //     res[3] &&
-                    //     res[3].status === "fulfilled" &&
-                    //     res[3].value &&
-                    //     res[3].value.total
-                    // ) {
+                    if (
+                        res[3] &&
+                        res[3].status === "fulfilled" &&
+                        res[3].value && 
+                        res[3].value.years
+                    ) {
 
-                    //     let gitScore = 0
+                        let gitScore = 0
 
-                    //     for (const key in res[3].value.total) {
-                    //         if (res[3] && res[3].value.total && res[3].value.total.hasOwnProperty(key)) {
-                    //             gitScore += parseInt((res[3].total[key]) / 30);
-                    //         }
-                    //     }
+                        let contri = res[3].value.years;
 
-                    //     // console.log(name, gitScore)
+                        // console.log(contri)
 
-                    //     finalData.total_score += gitScore
+                        for (let i of contri) {
+                            if (i.hasOwnProperty("total")) {
+                                gitScore += parseInt((i["total"]) / 10);
+                            }
+                        }
 
-                    // }
+                        // console.log(name, gitScore)
+
+                        finalData.total_score += gitScore
+
+                    }
 
 
                     ////////////////// gfg score calculation //////////////////
@@ -891,7 +895,7 @@ exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
 
         PromiseList.push(p);
 
-        // if (PromiseList.length >= 4)
+        // if (PromiseList.length >= 2)
         //     break;
 
     }
@@ -960,11 +964,11 @@ exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
             );
 
 
-            console.log({
-                "success": true,
-                "message": `Leaderboard Updated Successfully!!`,
-                "leaderboard": updatedList
-            })
+            // console.log({
+            //     "success": true,
+            //     "message": `Leaderboard Updated Successfully!!`,
+            //     "leaderboard": updatedList
+            // })
 
 
 
