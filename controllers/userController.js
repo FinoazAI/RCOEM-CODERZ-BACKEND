@@ -1,6 +1,7 @@
 const ErrorHander = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const User = require("../models/userModel");
+const ContestDB = require("../models/contestModel");
 const LeaderBoard = require("../models/ranklistModel");
 const OtpModel = require("../models/otpModel");
 const nodeMailer = require("nodemailer");
@@ -818,7 +819,7 @@ exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
                     if (
                         res[3] &&
                         res[3].status === "fulfilled" &&
-                        res[3].value && 
+                        res[3].value &&
                         res[3].value.years
                     ) {
 
@@ -1003,3 +1004,5 @@ exports.cron_update_db = catchAsyncErrors(async (req, res, next) => {
             })
         })
 });
+
+
