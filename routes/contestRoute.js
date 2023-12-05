@@ -25,7 +25,7 @@ router.get("/geeksforgeeks", get_geeksforgeeks_contests);
 router.get("/hackerrank", get_hackerrank_contests);
 router.get("/hackerearth", get_hackerearth_contests);
 
-router.get("/cron_update_contest", cron_update_contest);
+router.get("/cron_contest", cron_update_contest);
 
 
 module.exports = router;
