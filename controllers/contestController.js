@@ -301,11 +301,11 @@ exports.cron_update_contest = catchAsyncErrors(async (req, res, next) => {
             }
 
 
-            let x = mongoose.connection.collections.contestdb
+            let x = mongoose.connection.collections.contestdbs
             // console.log(x)
 
             if (x) {
-                await LeaderBoard.deleteMany({})
+                await ContestDB.deleteMany({})
             }
 
             const updatedList = await ContestDB.create(
